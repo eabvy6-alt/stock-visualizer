@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stock Data Visualizer</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    label { display: block; margin-top: 1rem; font-weight: 600; }
+    select, input { padding: .5rem; font-size: 1rem; width: 100%; max-width: 20rem; }
+    button { margin-top: 1.5rem; padding: .6rem 1.2rem; font-size: 1rem; }
+    .error { background: #fdecec; border: 1px solid #c0392b; padding: .75rem; margin-top: 1rem; }
+    .chart { margin-top: 2rem; }
+    .chart img { width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>Stock Data Visualizer</h1>
+  <form method="post">
+    <label for="symbol">Stock symbol</label>
+    <select id="symbol" name="symbol" required>
+      <option value="">Choose a symbol</option>
+      {% for s in symbols %}
+      <option value="{{ s }}" {% if s == form.symbol %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="chart">Chart type</label>
+    <select id="chart" name="chart">
+      {% for k, v in chart_types.items() %}
+      <option value="{{ k }}" {% if k == form.chart %}selected{% endif %}>{{ v }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="series">Time series</label>
+    <select id="series" name="series">
+      {% for k, v in series.items() %}
+      <option value="{{ k }}" {% if k == form.series %}selected{% endif %}>{{ v[0] }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="begin">Begin date</label>
+    <input type="date" id="begin" name="begin" value="{{ form.begin }}" required>
+
+    <label for="end">End date</label>
+    <input type="date" id="end" name="end" value="{{ form.end }}" required>
+
+    <button type="submit">Generate chart</button>
+  </form>
+
+  {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
+  {% if chart_uri %}
+  <div class="chart"><img src="{{ chart_uri }}" alt="Stock price chart"></div>
+  {% endif %}
+</body>
+</html>
